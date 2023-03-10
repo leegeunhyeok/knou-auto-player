@@ -264,6 +264,7 @@ class KNOUAutoPlayer:
             logger.info('stop watching and close video')
             logger.empty()
 
+    def _end_video(self):
         try:
             self._focus_to_popup()
             self._driver.execute_script('fnStudyEnd();')
@@ -322,7 +323,15 @@ class KNOUAutoPlayer:
                 except:
                     pass
 
-                self._waiting_for_video(f'{Fore.CYAN}{title}{Fore.RESET}')
+                try:
+                    self._waiting_for_video(f'{Fore.CYAN}{title}{Fore.RESET}')
+                    self._end_video()
+                except KeyboardInterrupt:
+                    logger.empty()
+                    self._end_video()
+                    logger.warning('user interrupted')
+                    exit(-1)
+
                 time.sleep(1)
             else:
                 logger.empty()
