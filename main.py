@@ -40,23 +40,33 @@ from src.constants import LOGIN_PAGE_URL, \
     SELECTORS, \
     LOADING_SYMBOLS
 
-HEADLESS_ENABLED = False
-
 class KNOUAutoPlayer:
     __VERSION__ = '1.0.0'
 
-    def __init__(self):
-        logger.info('loading chrome driver..')
+    def __init__(self, **kwargs):
+        logger.info('initializing knou-auto-player')
         try:
             options = webdriver.ChromeOptions()
-            if HEADLESS_ENABLED:
+            enabled_headless = kwargs['enable_headless']
+            mute_audio = kwargs['mute_audio']
+            enabled_string = f'{Fore.GREEN}enabled{Fore.RESET}'
+            disabled_string = f'{Fore.RED}disabled{Fore.RESET}'
+
+            if kwargs['enable_headless']:
                 options.add_argument('headless')
                 options.add_argument('window-size=800x600')
                 options.add_argument('disable-gpu')
                 options.add_argument('log-level=3')
+            logger.info(f'○ headless mode {enabled_string if enabled_headless else disabled_string}')
+            
+            if kwargs['mute_audio']:
+                options.add_argument("--mute-audio")
+            logger.info(f'○ mute audio {enabled_string if mute_audio else disabled_string}')
 
             options.add_argument('--ignore-certificate-errors')
             options.add_argument('--ignore-ssl-errors')
+
+            logger.info('loading chrome driver..')
             driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), \
                                       options=options)
             driver.implicitly_wait(5)
@@ -347,12 +357,17 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('config.ini')
 
+    # player
+    enable_headless = config.get('player', 'headless') == '1'
+    mute_audio = config.get('player', 'mute_audio') == '1'
+
+    # account
     user_id = config.get('account', 'id')
     user_password = config.get('account', 'password')
 
     if not (user_id and user_password):
         raise ValueError('account information is required')
 
-    KNOUAutoPlayer() \
+    KNOUAutoPlayer(enable_headless=enable_headless, mute_audio=mute_audio) \
         .login(user_id, user_password) \
         .run()
