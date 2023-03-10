@@ -276,17 +276,16 @@ class KNOUAutoPlayer:
         lectures = self._load_lectures()
 
         for lecture in lectures:
-            logger.info(f'{lecture.title}')
-
             for video in lecture.videos:
+                title = f'{lecture.title} :: {video.title}'
+
                 if video.watched:
-                    logger.info(f'{Fore.GREEN}(watched){Fore.RESET} {video.title}')
+                    logger.info(f'{Fore.GREEN}(watched){Fore.RESET} {title}')
                     continue
                 if video.waiting:
-                    logger.info(f'{Fore.YELLOW}(waiting){Fore.RESET} {video.title}')
+                    logger.info(f'{Fore.YELLOW}(waiting){Fore.RESET} {title}')
                     continue
 
-                title = f'{lecture.title} :: {video.title}'
                 logger.info(f'{Fore.GREEN}preparing{Fore.RESET} {title}')
                 self._focus_to_main()
                 show_button_selector = SELECTORS['LECTURE']['VIDEO']['SHOW_VIDEO']
