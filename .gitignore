@@ -1,0 +1,5 @@
+*.pyc
+*.log
+*.spec
+
+.DS_Store
