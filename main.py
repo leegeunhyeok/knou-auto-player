@@ -88,28 +88,6 @@ class KNOUAutoPlayer:
         finally:
             self._driver.implicitly_wait(5)
 
-    def _get_xpath(self, element):
-        return self._driver.execute_script('''
-        let el = arguments[0];
-        aPath = '';
-        while (el.tagName != 'HTML') {
-            let parentElement = el.parentNode;
-            if (parentElement.querySelectorAll(el.tagName).length > 1) {
-                childIndex = 0;
-                parentElement.querySelectorAll(el.tagName).forEach((childElement) => {
-                    childIndex++;
-                    if (childElement === el) {
-                        aPath = el.tagName + '[' + childIndex + ']' + '/' +aPath;
-                    }
-                });
-            } else {
-                aPath = el.tagName + '/' + aPath;
-            }
-            el = el.parentNode;
-        }
-        return '/html/' + aPath.substring(0, aPath.length - 1).toLowerCase();
-        ''', element)
-
     def login(self, user_id, user_password):
         logger.info('connect to U-KNOU page..')
         self._driver.get(LOGIN_PAGE_URL)

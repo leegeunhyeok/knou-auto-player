@@ -33,13 +33,24 @@
 pip install -r requirements.txt
 ```
 
-`config.ini` 파일 열어 계정 정보를 입력하여 저장합니다.
+`config.ini` 파일 열어 계정 정보, 옵션을 지정한 후 저장합니다.
 
 ```
+[player]
+headless=1
+mute_audio=1
+
 [account]
 id=
 password=
 ```
+
+- player.headless
+  - 1: headless 모드 활성화 (브라우저 띄우지 않고 동작)
+  - 0: 브라우저 띄운 상태로 동작
+- player.mute_audio
+  - 1: 모든 소리 음소거
+  - 0: 모든 소리 재생
 
 ## 실행
 
