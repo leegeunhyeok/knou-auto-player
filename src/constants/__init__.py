@@ -3,7 +3,7 @@ LOGIN_PAGE_URL = 'https://ucampus.knou.ac.kr/ekp/user/login/retrieveULOLogin.do'
 STUDY_PAGE_URL = 'https://ucampus.knou.ac.kr/ekp/user/study/retrieveUMYStudy.sdo'
 
 # play percentage
-VIDEO_ELAPSE_PERCENT = 50
+VIDEO_ELAPSE_PERCENT = 60
 
 # query selectors
 SELECTORS = {
