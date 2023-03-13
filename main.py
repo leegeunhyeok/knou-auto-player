@@ -27,6 +27,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import UnexpectedAlertPresentException
 from webdriver_manager.chrome import ChromeDriverManager
 from colorama import Fore
 
@@ -222,11 +223,8 @@ class KNOUAutoPlayer:
                 return
 
     def _focus_to_video(self):
-        for window in self._driver.window_handles:
-            if window != self._main_window:
-                self._driver.switch_to.window(window)
-                self._driver.switch_to.frame(SELECTORS['PLAYER']['ROOT'])
-                return
+        self._focus_to_popup()
+        self._driver.switch_to.frame(SELECTORS['PLAYER']['ROOT'])
             
     def _waiting_for_video(self, title):
         symbol_count = len(LOADING_SYMBOLS)
@@ -296,7 +294,22 @@ class KNOUAutoPlayer:
                     By.CSS_SELECTOR,
                     f'#{video.id} > {show_button_selector}'
                 ).click()
-                self._focus_to_video()
+
+                try:
+                    self._focus_to_video()
+                except UnexpectedAlertPresentException as error:
+                    message = str(error)
+                    is_over_learning_message = '초과' in message
+                    if is_over_learning_message:
+                        self._focus_to_main()
+                        logger.warning('reached daily learning limit')
+                        continue
+                    else:
+                        logger.error('cannot start video', message)
+                        continue
+                except Exception as error:
+                    logger.error('cannot start video', str(error))
+                    continue
                 
                 time.sleep(5)
 
