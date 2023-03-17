@@ -285,23 +285,22 @@ class KNOUAutoPlayer:
                     logger.info(f'{Fore.YELLOW}(waiting){Fore.RESET} {title}')
                     continue
 
-                logger.info(f'{Fore.GREEN}preparing{Fore.RESET} {title}')
-                self._focus_to_main()
-                show_button_selector = SELECTORS['LECTURE']['VIDEO']['SHOW_VIDEO']
-
-                self._open_all_lectures()
-                self._driver.find_element(
-                    By.CSS_SELECTOR,
-                    f'#{video.id} > {show_button_selector}'
-                ).click()
-
+                
                 try:
+                    logger.info(f'{Fore.GREEN}preparing{Fore.RESET} {title}')
+                    self._focus_to_main()
+                    show_button_selector = SELECTORS['LECTURE']['VIDEO']['SHOW_VIDEO']
+
+                    self._open_all_lectures()
+                    self._driver.find_element(
+                        By.CSS_SELECTOR,
+                        f'#{video.id} > {show_button_selector}'
+                    ).click()
                     self._focus_to_video()
                 except UnexpectedAlertPresentException as error:
                     message = str(error)
                     is_over_learning_message = '초과' in message
                     if is_over_learning_message:
-                        self._focus_to_main()
                         logger.warning('reached daily learning limit')
                         continue
                     else:
