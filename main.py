@@ -68,8 +68,7 @@ class KNOUAutoPlayer:
             options.add_argument('--ignore-ssl-errors')
 
             logger.info('loading chrome driver..')
-            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), \
-                                      options=options)
+            driver = webdriver.Chrome(service=Service(), options=options)
             driver.implicitly_wait(5)
         except Exception as e:
             logger.error('failed to load chrome driver', str(e))
